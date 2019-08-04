@@ -25,7 +25,13 @@ app.set('googleAnalytics', {
   expires_in
 })
 
-app.get('/analytics', async function (req, res) {
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", process.env.ACCESS_CONTROL_ALLOW_ORIGIN)
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+  next();
+});
+
+app.get(`/${process.env.PROJECT_ID}/analytics`, async function (req, res) {
   const {
     startDate='30daysAgo',
     endDate='today',
@@ -49,4 +55,6 @@ app.get('/ping', function (req, res) {
  
 app.listen(process.env.PORT, () => {
   console.log(`started on port ${process.env.PORT}`)
+  console.log('PROJECT_ID', process.env.PROJECT_ID)
+  console.log('ACCESS_CONTROL_ALLOW_ORIGIN', process.env.ACCESS_CONTROL_ALLOW_ORIGIN)
 })
